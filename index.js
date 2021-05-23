@@ -42,23 +42,28 @@ function name() {
 
 // image upload
 app.post("/img",upload.single('profile'),(req,res)=>{
-    var b= fun.data.getData(mysqlConnection,1,"name","image");
-    console.log(b);// output undefined
-    // let a=req.body;
-    // console.log(req);
-    // var sql = `INSERT INTO image (name, file) VALUES ('${a.name}', '${req.file.filename}')`;
-    // mysqlConnection.query(sql,(err, rows) => {
-    //     if (!err){
-    //         r=JSON.stringify(rows);
-    //         res.json(r);
+    // fun.data.getData(mysqlConnection,1,"name","image",function (err, rows) {
+    //     if (err) {
+    //         console.log(err);
     //     }
-    //     else{
-    //         res.json({
-    //             "name":a.name,
-    //             "file":req.file.filename
-    //         });
-    //     }
-    // })
+    //     console.log(rows[0].name);
+
+    // });
+    let a=req.body;
+    console.log(a);
+    var sql = `INSERT INTO image (name,phone, file) VALUES ('${a.name}','${a.phone}', '${req.file.filename}')`;
+    mysqlConnection.query(sql,(err, rows) => {
+        if (!err){
+            r=JSON.stringify(rows);
+            res.json(r);
+        }
+        else{
+            res.json({
+                "name":a.name,
+                "file":req.file.filename
+            });
+        }
+    })
    
     
 })
@@ -94,9 +99,13 @@ app.delete('/employees/:id', (req, res) => {
     })
 });
 
-//Insert an employees
+//Insert an employees. if we this *upload.single('profile')* then we can access form-data from postman
+// app.post('/employees',upload.single('profile'), (req, res) => {
 app.post('/employees', (req, res) => {
+    
     let emp = req.body;
+    console.log(emp);
+    
     var sql = `INSERT INTO Employee (Name, EmpCode,Salary) VALUES ('${emp.Name}', '${emp.EmpCode}','${emp.Salary}')`;
     mysqlConnection.query(sql,(err, rows) => {
         if (!err){
